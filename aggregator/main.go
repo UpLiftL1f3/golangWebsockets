@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net"
 	"net/http"
 	"strconv"
 
 	"github.com/UpLiftL1f3/tollCalc/types"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -21,6 +23,18 @@ func main() {
 	svc = NewLogMiddleware(svc)
 
 	makeHttpTransport(*listenAddr, svc)
+}
+
+func makeGRPCTransport(listenAddr string) error {
+	// -> Listener
+	ln, err := net.Listen("TCP", listenAddr)
+	if err != nil {
+		return err
+	}
+
+	// -> New GRPC server
+	server := grpc.NewServer([]grpc.ServerOption{}...)
+	return server.Serve(ln)
 }
 
 func makeHttpTransport(listenAddr string, svc Aggregator) {
