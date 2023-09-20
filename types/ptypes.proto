@@ -3,7 +3,7 @@ syntax = "proto3";
 option go_package = "github.com/UpLiftL1f3/golangWebsockets/types";
 
 service Aggregator {
-    rpc AggregateDistance(AggregateRequest) returns (None);
+    rpc DistanceAggregator(AggregateRequest) returns (None);
 }
 
 message None{}
