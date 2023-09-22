@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AggregatorClient interface {
-	DistanceAggregator(ctx context.Context, in *AggregateRequest, opts ...grpc.CallOption) (*None, error)
+	Aggregate(ctx context.Context, in *AggregateRequest, opts ...grpc.CallOption) (*None, error)
 }
 
 type aggregatorClient struct {
@@ -33,9 +33,9 @@ func NewAggregatorClient(cc grpc.ClientConnInterface) AggregatorClient {
 	return &aggregatorClient{cc}
 }
 
-func (c *aggregatorClient) DistanceAggregator(ctx context.Context, in *AggregateRequest, opts ...grpc.CallOption) (*None, error) {
+func (c *aggregatorClient) Aggregate(ctx context.Context, in *AggregateRequest, opts ...grpc.CallOption) (*None, error) {
 	out := new(None)
-	err := c.cc.Invoke(ctx, "/Aggregator/DistanceAggregator", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Aggregator/Aggregate", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *aggregatorClient) DistanceAggregator(ctx context.Context, in *Aggregate
 // All implementations must embed UnimplementedAggregatorServer
 // for forward compatibility
 type AggregatorServer interface {
-	DistanceAggregator(context.Context, *AggregateRequest) (*None, error)
+	Aggregate(context.Context, *AggregateRequest) (*None, error)
 	mustEmbedUnimplementedAggregatorServer()
 }
 
@@ -54,8 +54,8 @@ type AggregatorServer interface {
 type UnimplementedAggregatorServer struct {
 }
 
-func (UnimplementedAggregatorServer) DistanceAggregator(context.Context, *AggregateRequest) (*None, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DistanceAggregator not implemented")
+func (UnimplementedAggregatorServer) Aggregate(context.Context, *AggregateRequest) (*None, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Aggregate not implemented")
 }
 func (UnimplementedAggregatorServer) mustEmbedUnimplementedAggregatorServer() {}
 
@@ -70,20 +70,20 @@ func RegisterAggregatorServer(s grpc.ServiceRegistrar, srv AggregatorServer) {
 	s.RegisterService(&Aggregator_ServiceDesc, srv)
 }
 
-func _Aggregator_DistanceAggregator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Aggregator_Aggregate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AggregateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AggregatorServer).DistanceAggregator(ctx, in)
+		return srv.(AggregatorServer).Aggregate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Aggregator/DistanceAggregator",
+		FullMethod: "/Aggregator/Aggregate",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AggregatorServer).DistanceAggregator(ctx, req.(*AggregateRequest))
+		return srv.(AggregatorServer).Aggregate(ctx, req.(*AggregateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +96,8 @@ var Aggregator_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AggregatorServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DistanceAggregator",
-			Handler:    _Aggregator_DistanceAggregator_Handler,
+			MethodName: "Aggregate",
+			Handler:    _Aggregator_Aggregate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
