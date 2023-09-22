@@ -24,10 +24,18 @@ func main() {
 	svc = NewLogMiddleware(svc)
 
 	go makeGRPCTransport(*grpcListenAddr, svc)
+	// time.Sleep(time.Second * 5)
+	// c, err := client.NewGRPCClient(*grpcListenAddr)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// c.Aggregat
 	makeHttpTransport(*httpListenAddr, svc)
 }
 
 func makeGRPCTransport(listenAddr string, svc Aggregator) error {
+	fmt.Printf("GRPC transport running on port %s \n", listenAddr)
+
 	// -> Listener
 	ln, err := net.Listen("TCP", listenAddr)
 	if err != nil {
